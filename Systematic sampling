@@ -1,0 +1,14 @@
+import pandas as pd
+
+
+sample_interval=50
+
+
+
+#datafram to test
+df = pd.read_csv(r'C:\Users\12024\Documents\PowerBI\norfolklibrary.csv')
+df.index = df.index + 1
+
+df.insert(len(df.columns),'Sample Selected',df.index%sample_interval==0)
+
+print(df.loc[df['Sample Selected'] == True])
