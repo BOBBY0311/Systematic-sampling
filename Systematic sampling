@@ -1,14 +1,49 @@
 import pandas as pd
+import tkinter as tk
+from tkinter import filedialog
+#create form to create seed and select number of samples
+def getcsv ():
+    global df
+    import_file_path = filedialog.askopenfilename()
+    df = pd.read_csv(import_file_path)
+    df.index = df.index + 1
+    print (df)
 
+def select_save_sample ():
+    global df
+    global sample_interval
+    global sample_selected
+    sample_interval=int(e1.get())
+    df.insert(len(df.columns),'Sample Selected',df.index%sample_interval==0)
+    df.insert(0,'Record Position',df.index)
+    sample_selected=df.loc[df['Sample Selected'] == True]
+    print(df.loc[df['Sample Selected'] == True])
+    del sample_selected['Sample Selected']
+    #Choose location to save file
+    export_file_path = filedialog.asksaveasfilename(defaultextension='.xlsx')
+    sample_selected.to_excel (export_file_path, index = False, header=True)
 
-sample_interval=50
+master = tk.Tk()
+master.title('Systemic Sample Generator')
+tk.Label(master, text="Sample Interval").grid(row=1)
+#tk.Label(master, text="Number of Samples").grid(row=2)
 
+e1 = tk.Entry(master)
+#e2 = tk.Entry(master)
 
+e1.grid(row=1, column=1)
+#e2.grid(row=2, column=1)
+e1.insert(10,0)
+#e2.insert(1,0)
 
-#datafram to test
-df = pd.read_csv(r'C:\Users\12024\Documents\PowerBI\norfolklibrary.csv')
-df.index = df.index + 1
+tk.Button(text='Import CSV File',command=getcsv).grid(
+            row=0,column=1,sticky=tk.W,pady=4)
 
-df.insert(len(df.columns),'Sample Selected',df.index%sample_interval==0)
+tk.Button(master,
+          text='Make Sample',command=select_save_sample).grid(
+              row=5,column=1,sticky=tk.W,pady=4)
 
-print(df.loc[df['Sample Selected'] == True])
+tk.Button(master,
+          text='Close Program',command=master.destroy).grid(
+            row=5,column=2,sticky=tk.W,pady=4)
+tk.mainloop()
