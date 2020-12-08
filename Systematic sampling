@@ -8,6 +8,15 @@ def getcsv ():
     df = pd.read_csv(import_file_path)
     df.index = df.index + 1
     print (df)
+#create form to create seed and select number of samples
+def getExcel ():
+    global df
+    import_file_path = filedialog.askopenfilename()
+    df = pd.read_excel (import_file_path)
+    df.index = df.index + 1
+    global data
+    data=pd.DataFrame(df)
+    print (df)
 
 def select_save_sample ():
     global df
@@ -38,6 +47,9 @@ e1.insert(10,0)
 
 tk.Button(text='Import CSV File',command=getcsv).grid(
             row=0,column=1,sticky=tk.W,pady=4)
+tk.Button(text='Import Excel File',command=getExcel).grid(
+            row=0,column=2,sticky=tk.W,pady=4)
+
 
 tk.Button(master,
           text='Make Sample',command=select_save_sample).grid(
@@ -46,4 +58,7 @@ tk.Button(master,
 tk.Button(master,
           text='Close Program',command=master.destroy).grid(
             row=5,column=2,sticky=tk.W,pady=4)
+
+
+
 tk.mainloop()
